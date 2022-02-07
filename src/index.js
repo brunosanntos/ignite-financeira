@@ -121,25 +121,24 @@ app.post("/deposit", verifyIfExisteAccountCPF, (request, response) =>{
 app.post("/saque", verifyIfExisteAccountCPF, (request, response) => {
 
     // Passando as informações
-    const { amount } =  request.body;
+    const { description, amount } =  request.body;
 
     // Recuperando a conta do cliente
     const { customer } = request;
 
     // Variavel com o saldo
     const balance = getBalance(customer.statement);
-    console.log(balance)
-
-    // Condição para verificar o saldo
-    if (balance <  amount){
-        return response.status(400).json({ error: "Saldo indisponivel"});
-    }
-
+  
     // função para o saque
     const statementOperation = {
         amount,
         created_at: new Date(),
         type: "debit",
+    }
+
+    // Condição para verificar o saldo
+    if (balance <  amount){
+        return response.status(400).json({ error: "Saldo indisponivel"});
     }
 
     // Atualizando o valor no arry
